@@ -1,0 +1,29 @@
+apply plugin: 'application'
+
+group 'de.kaleidox'
+version '2.0.0'
+
+sourceCompatibility = 11
+targetCompatibility = 11
+
+repositories {
+    jcenter()
+    maven { url 'https://jitpack.io' }
+}
+
+sourceSets {
+    jcutil.java.srcDirs = ["src/jcutil/java/"]
+}
+
+dependencies {
+    implementation 'org.javacord:javacord:3.0.3'
+    implementation 'de.btobastian.sdcf4j:sdcf4j-core:v1.0.10'
+    implementation 'de.btobastian.sdcf4j:sdcf4j-javacord:v1.0.10'
+    implementation 'de.kaleidox:kalutils:0.4.1'
+    implementation "org.reflections:reflections:0.9.10"
+    implementation "com.vdurmont:emoji-java:4.0.0"
+
+    runtimeOnly 'org.apache.logging.log4j:log4j-core:2.11.0'
+
+    compileOnly 'org.jetbrains:annotations:17.0.0'
+}
