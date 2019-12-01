@@ -1,0 +1,14 @@
+version: "2.0"
+
+services:
+    cobalton:
+        image: sbadger:public
+        container_name: sbadger-public
+        restart: on-failure
+        build:
+            context: .
+            dockerfile: Dockerfile
+        volumes:
+            - /var/bots/SBadger:/app/data:rw
+        working_dir: /app
+        entrypoint: /app/binaries/bin/SBadger
