@@ -25,12 +25,31 @@ public abstract class AbstractInput<T, V extends TargetedView<Messageable, Compl
     private final TextChannel channel;
 
     //region Properties
-    protected Predicate<User> userFilter = any -> true;
+    protected Predicate<User> userFilter = usr -> !usr.isYourself();
     protected Predicate<TextChannel> channelFilter = channel()::equals;
     protected Predicate<T> responseFilter = any -> true;
     protected Duration timeout = Duration.ZERO;
     protected boolean deleteOnResponse = false;
     //endregion
+
+    protected AbstractInput(
+            Class<? extends T> responseType,
+            V view,
+            TextChannel channel,
+            Predicate<User> userFilter,
+            Predicate<TextChannel> channelFilter,
+            Predicate<T> responseFilter,
+            Duration timeout,
+            boolean deleteOnResponse
+    ) {
+        this(responseType, view, channel);
+
+        this.userFilter = userFilter;
+        this.channelFilter = channelFilter;
+        this.responseFilter = responseFilter;
+        this.timeout = timeout;
+        this.deleteOnResponse = deleteOnResponse;
+    }
 
     protected AbstractInput(Class<? extends T> responseType, V view, TextChannel channel) {
         this.responseType = requireNonNull(responseType, "ResponseType cannot be null");
@@ -140,6 +159,8 @@ public abstract class AbstractInput<T, V extends TargetedView<Messageable, Compl
         protected EngineBase(Message botMessage, int managerCapacity) {
             this.botMessage = botMessage;
             this.managers = new ArrayList<>(managerCapacity);
+
+            future.whenCompleteAsync((val, ex) -> cleanup());
         }
 
         protected void cleanup() {

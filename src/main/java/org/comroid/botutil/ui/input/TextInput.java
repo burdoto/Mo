@@ -1,28 +1,43 @@
 package org.comroid.botutil.ui.input;
 
+import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import org.comroid.botutil.ui.input.model.AbstractInput;
-import org.comroid.botutil.ui.output.MessageBasedView;
+import org.comroid.botutil.ui.output.model.MessageBasedView;
 import org.comroid.util.BuilderStruct;
 import org.comroid.util.model.HoldingSupplier;
 
 import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.Message;
+import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
 
 import static java.util.Objects.requireNonNull;
 
 public class TextInput extends AbstractInput<String, MessageBasedView> {
+    public TextInput(
+            MessageBasedView view,
+            TextChannel channel,
+            Predicate<User> userFilter,
+            Predicate<TextChannel> channelFilter,
+            Predicate<String> responseFilter,
+            Duration timeout,
+            boolean deleteOnResponse
+    ) {
+        super(String.class, view, channel, userFilter, channelFilter, responseFilter, timeout, deleteOnResponse);
+    }
+
     public TextInput(MessageBasedView view, TextChannel channel) {
         super(String.class, view, channel);
     }
 
     @Override
     public CompletableFuture<String> read_impl() {
-        return showOutput().thenCompose(message -> new Engine(message).future);
+        return showOutput().thenCompose(msg -> new Engine(msg).future);
     }
 
     public TextInput.Builder builder() {
@@ -32,8 +47,6 @@ public class TextInput extends AbstractInput<String, MessageBasedView> {
     private class Engine extends EngineBase implements MessageCreateListener {
         public Engine(Message botMessage) {
             super(botMessage, 1);
-
-            future.whenCompleteAsync((val, ex) -> cleanup());
 
             manager(botMessage.getChannel().addMessageCreateListener(this));
         }

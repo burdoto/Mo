@@ -2,6 +2,7 @@ package org.comroid.botutil;
 
 import java.util.Optional;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.vdurmont.emoji.EmojiParser;
 import org.javacord.api.entity.channel.TextChannel;
@@ -14,6 +15,8 @@ import org.javacord.api.util.DiscordRegexPattern;
 import org.javacord.core.entity.emoji.UnicodeEmojiImpl;
 
 public final class Find {
+    public static final Pattern BOOLEAN_GROUPED = Pattern.compile("(?<true>(y(es)?)|(true))|(?<false>(no?)|(false))");
+
     public static Optional<? extends Emoji> emoji(Server srv, String from) {
         if (!EmojiParser.parseToAliases(from).equals(from))
             return Optional.ofNullable(UnicodeEmojiImpl.fromString(from));
@@ -49,5 +52,12 @@ public final class Find {
         return textChannel.getMessages(1)
                 .thenApply(MessageSet::getNewestMessage)
                 .join();
+    }
+
+    public static boolean bool(String value) {
+        final Matcher matcher = BOOLEAN_GROUPED.matcher(value.toLowerCase());
+
+        if (matcher.matches()) return matcher.group("true") != null;
+        else throw new IllegalArgumentException("Unrecognized argument: " + value);
     }
 }

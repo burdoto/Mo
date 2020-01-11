@@ -1,4 +1,4 @@
-package org.comroid.botutil.ui.output;
+package org.comroid.botutil.ui.output.model;
 
 import java.util.concurrent.CompletableFuture;
 
