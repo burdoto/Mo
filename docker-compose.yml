@@ -1,7 +1,7 @@
 version: "2.0"
 
 services:
-    sbadger:
+    cobalton:
         image: sbadger:public
         container_name: sbadger-public
         restart: on-failure
