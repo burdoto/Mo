@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.comroid.sbadger.util.files.FileProvider;
+import org.comroid.botutil.util.files.FileProvider;
+import org.comroid.sbadger.engine.ReactionCore;
+import org.comroid.sbadger.engine.ResponseCore;
 import de.comroid.eval.EvalCommand;
 import de.comroid.javacord.util.commands.CommandHandler;
 import de.comroid.javacord.util.server.properties.PropertyGroup;
@@ -73,6 +75,7 @@ public final class Bot {
             CMD.prefixes = new String[]{"badge!", "mo!"};
             logger.info(String.format("Setting command prefixes: '%s'", String.join("', '", CMD.prefixes)));
             CMD.useDefaultHelp(null);
+            CMD.registerCommands(ReactionCore.COMMANDS, ResponseCore.COMMANDS);
             CMD.registerCommands(EvalCommand.INSTANCE);
 
             logger.info("Initialzing server properties");

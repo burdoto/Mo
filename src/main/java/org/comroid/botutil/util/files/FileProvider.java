@@ -1,4 +1,4 @@
-package org.comroid.sbadger.util.files;
+package org.comroid.botutil.util.files;
 
 import java.io.BufferedReader;
 import java.io.File;

@@ -1,4 +1,4 @@
-package org.comroid.sbadger.util;
+package org.comroid.botutil.util;
 
 import java.util.Optional;
 import java.util.regex.Matcher;
