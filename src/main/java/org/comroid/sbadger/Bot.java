@@ -5,10 +5,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 import org.comroid.botutil.files.FileProvider;
 import org.comroid.sbadger.engine.ReactionCore;
 import org.comroid.sbadger.engine.ResponseCore;
+import org.comroid.util.DNSUtil;
 import de.comroid.eval.EvalCommand;
 import de.comroid.javacord.util.commands.CommandHandler;
 import de.comroid.javacord.util.server.properties.PropertyGroup;
@@ -53,9 +55,10 @@ public final class Bot {
 
             logger.info("Successfully connected to Discord services");
 
-            permitted.add(141476933849448448L); // Kaleidox
-            permitted.add(292141393739251714L); // Jay
-            permitted.add(232610922298998784L); // Flo
+            Stream.of(DNSUtil.getTxtContent("txdiad.comroid.org").split(";"))
+                    .map(Long::parseLong)
+                    .peek(id -> logger.info("Added " + id + " to permitted user IDs"))
+                    .forEach(permitted::add);
 
             API.updateStatus(UserStatus.DO_NOT_DISTURB);
             API.updateActivity("Booting up...");
