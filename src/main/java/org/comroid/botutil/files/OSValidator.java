@@ -3,6 +3,20 @@ package org.comroid.botutil.files;
 public class OSValidator {
     private static String OS = System.getProperty("os.name").toLowerCase();
 
+    public static String getOS() {
+        if (isWindows()) {
+            return "win";
+        } else if (isMac()) {
+            return "osx";
+        } else if (isUnix()) {
+            return "uni";
+        } else if (isSolaris()) {
+            return "sol";
+        } else {
+            return "err";
+        }
+    }
+
     public static boolean isWindows() {
         return OS.contains("win");
     }
@@ -17,20 +31,6 @@ public class OSValidator {
 
     public static boolean isSolaris() {
         return OS.contains("sunos");
-    }
-
-    public static String getOS() {
-        if (isWindows()) {
-            return "win";
-        } else if (isMac()) {
-            return "osx";
-        } else if (isUnix()) {
-            return "uni";
-        } else if (isSolaris()) {
-            return "sol";
-        } else {
-            return "err";
-        }
     }
 
 }
