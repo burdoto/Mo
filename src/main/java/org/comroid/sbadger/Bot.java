@@ -24,7 +24,6 @@ import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.activity.ActivityType;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
-import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.UserStatus;
 import org.javacord.api.util.logging.ExceptionLogger;
 
@@ -38,7 +37,6 @@ public final class Bot {
     public static final StatsClient STATS;
     public static final CommandHandler CMD;
     public static final ServerPropertiesManager PROP;
-    public static final Server SRV;
 
     public static final List<Long> permitted = new ArrayList<>();
 
@@ -76,6 +74,7 @@ public final class Bot {
             logger.info(String.format("Setting command prefixes: '%s'", String.join("', '", CMD.prefixes)));
             CMD.useDefaultHelp(null);
             CMD.registerCommands(ReactionCore.COMMANDS, ResponseCore.COMMANDS);
+            CMD.registerCommands(AdminCommands.INSTANCE);
             CMD.registerCommands(EvalCommand.INSTANCE);
 
             logger.info("Initialzing server properties");
@@ -91,8 +90,6 @@ public final class Bot {
                     .getScheduler()
                     .scheduleAtFixedRate(Bot::storeAllData, 5, 5, TimeUnit.MINUTES);
             Runtime.getRuntime().addShutdownHook(new Thread(Bot::terminateAll));
-
-            SRV = API.getServerById(625494140427173889L).orElseThrow(IllegalStateException::new);
 
             logger.info("Initializing Automation Core");
 

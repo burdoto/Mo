@@ -35,13 +35,13 @@ public class TextInput extends AbstractInput<String, MessageBasedView> {
         super(String.class, view, channel);
     }
 
-    @Override
-    public CompletableFuture<String> read_impl() {
-        return showOutput().thenCompose(msg -> new Engine(msg).future);
-    }
-
     public TextInput.Builder builder() {
         return new Builder();
+    }
+
+    @Override
+    protected CompletableFuture<String> read_impl() {
+        return showOutput().thenCompose(msg -> new Engine(msg).future);
     }
 
     private class Engine extends EngineBase implements MessageCreateListener {
@@ -74,12 +74,12 @@ public class TextInput extends AbstractInput<String, MessageBasedView> {
                     requireNonNull(getChannel(), "Channel cannot be unset!"));
         }
 
-        public TextChannel getChannel() {
-            return channel;
-        }
-
         public Supplier<MessageBasedView> getViewSupplier() {
             return view;
+        }
+
+        public TextChannel getChannel() {
+            return channel;
         }
 
         public final Builder setChannel(TextChannel channel) {

@@ -19,12 +19,13 @@ import org.javacord.api.event.message.reaction.SingleReactionEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
 import org.javacord.api.listener.message.reaction.ReactionAddListener;
 import org.javacord.api.listener.message.reaction.ReactionRemoveListener;
+import org.javacord.api.util.logging.ExceptionLogger;
 
 public class BooleanInput extends AbstractInput<Boolean, MessageBasedView> {
     private String yesEmoji = "✅";
     private String noEmoji = "❌";
 
-    protected BooleanInput(
+    public BooleanInput(
             MessageBasedView view,
             TextChannel channel,
             Predicate<User> userFilter,
@@ -36,7 +37,7 @@ public class BooleanInput extends AbstractInput<Boolean, MessageBasedView> {
         super(Boolean.class, view, channel, userFilter, channelFilter, responseFilter, timeout, deleteOnResponse);
     }
 
-    protected BooleanInput(MessageBasedView view, TextChannel channel) {
+    public BooleanInput(MessageBasedView view, TextChannel channel) {
         super(Boolean.class, view, channel);
     }
 
@@ -82,6 +83,9 @@ public class BooleanInput extends AbstractInput<Boolean, MessageBasedView> {
         protected Engine(Message botMessage) {
             super(botMessage, 3);
 
+            CompletableFuture.allOf(botMessage.addReaction(yesEmoji), botMessage.addReaction(noEmoji))
+                    .exceptionally(ExceptionLogger.get());
+
             manager(botMessage.getChannel().addMessageCreateListener(this));
             manager(botMessage.addReactionAddListener(this));
             manager(botMessage.addReactionRemoveListener(this));
@@ -107,7 +111,7 @@ public class BooleanInput extends AbstractInput<Boolean, MessageBasedView> {
         }
 
         private void onReaction(SingleReactionEvent event) {
-            if (getUserFilter().test(event.getUser())) return;
+            if (event.getUser().isYourself() || !getUserFilter().test(event.getUser())) return;
 
             final String emoji = event.getEmoji().getMentionTag();
 
@@ -118,6 +122,13 @@ public class BooleanInput extends AbstractInput<Boolean, MessageBasedView> {
         @Override
         public void onReactionRemove(ReactionRemoveEvent event) {
             onReaction(event);
+        }
+
+        @Override
+        protected void cleanup() {
+            super.cleanup();
+
+            botMessage.removeAllReactions().exceptionally(ExceptionLogger.get());
         }
     }
 }

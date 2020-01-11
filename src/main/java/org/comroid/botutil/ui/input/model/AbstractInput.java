@@ -26,7 +26,7 @@ public abstract class AbstractInput<T, V extends TargetedView<Messageable, Compl
 
     //region Properties
     protected Predicate<User> userFilter = usr -> !usr.isYourself();
-    protected Predicate<TextChannel> channelFilter = channel()::equals;
+    protected Predicate<TextChannel> channelFilter = textChannel -> channel().equals(textChannel);
     protected Predicate<T> responseFilter = any -> true;
     protected Duration timeout = Duration.ZERO;
     protected boolean deleteOnResponse = false;
@@ -90,7 +90,7 @@ public abstract class AbstractInput<T, V extends TargetedView<Messageable, Compl
     protected CompletableFuture<Message> showOutput() {
         final CompletableFuture<Message> future = targetedView().view(channel());
 
-        if (!timeout.isZero() || !timeout.isNegative()) channel.getApi()
+        if (!timeout.isZero() && !timeout.isNegative()) channel.getApi()
                 .getThreadPool()
                 .getScheduler()
                 .schedule(() -> {

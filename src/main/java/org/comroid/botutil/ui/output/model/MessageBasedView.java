@@ -2,8 +2,6 @@ package org.comroid.botutil.ui.output.model;
 
 import java.util.concurrent.CompletableFuture;
 
-import org.comroid.botutil.ui.output.model.TargetedView;
-
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.Messageable;
 
