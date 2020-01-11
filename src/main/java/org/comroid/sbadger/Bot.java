@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.comroid.botutil.util.files.FileProvider;
+import org.comroid.botutil.files.FileProvider;
 import org.comroid.sbadger.engine.ReactionCore;
 import org.comroid.sbadger.engine.ResponseCore;
 import de.comroid.eval.EvalCommand;

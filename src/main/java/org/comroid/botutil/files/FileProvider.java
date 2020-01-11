@@ -1,4 +1,4 @@
-package org.comroid.botutil.util.files;
+package org.comroid.botutil.files;
 
 import java.io.BufferedReader;
 import java.io.File;

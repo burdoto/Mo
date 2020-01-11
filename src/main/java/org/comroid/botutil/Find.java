@@ -1,4 +1,4 @@
-package org.comroid.botutil.util;
+package org.comroid.botutil;
 
 import java.util.Optional;
 import java.util.regex.Matcher;

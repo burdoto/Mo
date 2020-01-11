@@ -1,4 +1,4 @@
-package org.comroid.botutil.util.files;
+package org.comroid.botutil.files;
 
 public class OSValidator {
     private static String OS = System.getProperty("os.name").toLowerCase();
